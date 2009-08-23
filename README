@@ -1,0 +1,33 @@
+INTRODUCTION
+
+It all started one day when I wanted to know when I'd saved a PHP file with
+syntax errors.  Since I'm a vim guy, I started off with a simple autocommand that
+ran php -l, displaying its output at the bottom of the vim window.  This worked
+well until gvim started NOT displaying the output, merely scrolling the command
+area up.  Next I started playing around with redir and verbosefile and trying to
+tail the output of that file.  That sorta worked okay, but if I overwrote the
+file, tail got kinda messed up so I ended up just appending everything endlessly
+to this file and I really wasn't too enthused about having to occasionally empty
+the file.
+
+I figured I'd try to write a little something that worked with inotify to watch
+when the lint file was updated and pop up a notification whenever there was an
+error, et voilà, PHP Lint Roller was born.
+
+INSTALLATION
+
+To get this to work:
+
+1.  Add an autocommand to .vimrc.  Mine looks like this:
+      au BufWritePost *.php,*.phtml silent! !php -l % > /tmp/phplint
+
+2.  Add phplintroller.py to the list of startup programs.
+
+ISSUES
+
+This uses an older version of the pyinotify library, but it's what was in
+Jaunty's repos and I'm not nearly enough of a Python guy to screw around with
+stuff.  So I'd like to update it for that at some point.
+
+I'd also like to get it to update a currently displayed notification if the
+errors in the file are fixed, since there's a bit of a delay there.
